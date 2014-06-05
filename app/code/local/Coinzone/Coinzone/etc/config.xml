@@ -1,0 +1,63 @@
+<config>
+    <modules>
+        <Coinzone_Coinzone>
+            <version>0.1</version>
+        </Coinzone_Coinzone>
+    </modules>
+
+    <frontend>
+        <routers>
+            <coinzone>
+                <use>standard</use>
+                <args>
+                    <module>Coinzone_Coinzone</module>
+                    <frontName>coinzone_callback</frontName>
+                </args>
+            </coinzone>
+        </routers>
+    </frontend>
+
+    <global>
+        <blocks>
+            <Coinzone>
+                <class>Coinzone_Coinzone_Block</class>
+            </Coinzone>
+        </blocks>
+        <models>
+            <Coinzone>
+                <class>Coinzone_Coinzone_Model</class>
+            </Coinzone>
+        </models>
+        <resources>
+            <modulename_setup>
+                <setup>
+                    <module>Coinzone_Coinzone</module>
+                </setup>
+                <connection>
+                    <use>core_setup</use>
+                </connection>
+            </modulename_setup>
+            <modulename_write>
+                <connection>
+                    <use>core_write</use>
+                </connection>
+            </modulename_write>
+            <modulename_read>
+                <connection>
+                    <use>core_read</use>
+                </connection>
+            </modulename_read>
+        </resources>
+    </global>
+
+    <default>
+        <payment>
+            <Coinzone>
+                <active>0</active>
+                <model>Coinzone/paymentMethod</model>
+                <title>Coinzone</title>
+                <payment_action>authorize</payment_action>
+            </Coinzone>
+        </payment>
+    </default>
+</config>
