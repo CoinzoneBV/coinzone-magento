@@ -36,6 +36,7 @@ class Coinzone
     }
 
     /**
+     * Set headers and sign the request
      * @param $path
      * @param array $payload
      */
@@ -58,6 +59,7 @@ class Coinzone
     }
 
     /**
+     * API Call
      * @param $path
      * @param $payload
      * @return mixed|string

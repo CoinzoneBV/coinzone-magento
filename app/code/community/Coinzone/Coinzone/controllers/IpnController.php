@@ -12,6 +12,7 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
         $coinzone = new Coinzone($clientCode, $apiKey);
 
         $input = json_decode(file_get_contents('php://input'));
+
         /** @var \Mage_Sales_Model_Order $order */
         $order = Mage::getModel('sales/order')->loadByIncrementId($input->extRef);
         if (!$order) {
@@ -24,6 +25,7 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
             Mage::log('Coinzone - Invalid Coinzone transaction with ID:' . $input->intRef);
             return;
         }
+
         /** @var \Mage_Sales_Model_Order_Payment $payment */
         $payment = $order->getPayment();
         $payment->setPreparedMessage('Paid - Coinzone Transaction ID:' . $input->intRef);
