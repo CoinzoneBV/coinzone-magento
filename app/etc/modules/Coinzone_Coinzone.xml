@@ -2,7 +2,7 @@
     <modules>
         <Coinzone_Coinzone>
             <active>true</active>
-            <codePool>local</codePool>
+            <codePool>community</codePool>
         </Coinzone_Coinzone>
     </modules>
 </config>
