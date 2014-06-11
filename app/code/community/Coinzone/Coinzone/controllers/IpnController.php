@@ -22,7 +22,7 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
         if ($signature !== $this->getRequest()->getHeader('signature')) {
             Mage::log('Coinzone - Invalid signature for callback');
             Mage::app()->getResponse()
-                ->setHeader('HTTP/1.1', '500 Internal Server Error')
+                ->setHeader('HTTP/1.1', '400 Bad Request')
                 ->sendResponse();
             exit('Invalid Signature');
         }
@@ -32,7 +32,7 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
         if (!$this->order->getIncrementId()) {
             Mage::log('Coinzone - Invalid callback with orderId:' . $input->extRef);
             Mage::app()->getResponse()
-                ->setHeader('HTTP/1.1', '503 Service Unavailable')
+                ->setHeader('HTTP/1.1', '400 Bad Request')
                 ->sendResponse();
             exit;
         }

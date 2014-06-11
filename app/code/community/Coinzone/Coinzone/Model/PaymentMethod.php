@@ -75,6 +75,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
             'currency' => $order->getBaseCurrencyCode(),
             'reference' => $order->getIncrementId(),
             'speed' => $speed,
+            'email' => $order->getCustomerEmail(),
             'displayOrderInformation' => array(
                 'items' => $displayItems,
                 'tax' => $order->getTaxAmount(),
@@ -123,7 +124,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
         /* create payload array */
         $transactionId = $order->getPayment()->getLastTransId();
         $payload = array(
-            'refNo' => $transactionId,
+            'idTransaction' => $transactionId,
             'amount' => $amount,
             'currency' => $order->getBaseCurrencyCode(),
             'reason' => Mage::getSingleton('adminhtml/session')->getCommentText()
