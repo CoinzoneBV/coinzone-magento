@@ -12,7 +12,20 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
      */
     public function indexAction()
     {
-        $input = json_decode(file_get_contents('php://input'));
+        $content = file_get_contents('php://input');
+        $input = json_decode($content);
+
+        /** check signature */
+        $apiKey = $apiKey = Mage::getStoreConfig('payment/Coinzone/apiKey');
+        $stringToSign = $content . $this->getRequest()->getRequestUri() . $this->getRequest()->getHeader('timestamp');
+        $signature = hash_hmac('sha256', $stringToSign, $apiKey);
+        if ($signature !== $this->getRequest()->getHeader('signature')) {
+            Mage::log('Coinzone - Invalid signature for callback');
+            Mage::app()->getResponse()
+                ->setHeader('HTTP/1.1', '500 Internal Server Error')
+                ->sendResponse();
+            exit('Invalid Signature');
+        }
 
         $this->order = Mage::getModel('sales/order')->loadByIncrementId($input->extRef);
         if (!$this->order->getIncrementId()) {
