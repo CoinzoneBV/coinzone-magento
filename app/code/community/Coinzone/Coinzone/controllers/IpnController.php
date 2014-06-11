@@ -28,9 +28,9 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
         }
 
         /** check order */
-        $this->order = Mage::getModel('sales/order')->loadByIncrementId($input->extRef);
+        $this->order = Mage::getModel('sales/order')->loadByIncrementId($input->reference);
         if (!$this->order->getIncrementId()) {
-            Mage::log('Coinzone - Invalid callback with orderId:' . $input->extRef);
+            Mage::log('Coinzone - Invalid callback with orderId:' . $input->reference);
             Mage::app()->getResponse()
                 ->setHeader('HTTP/1.1', '400 Bad Request')
                 ->sendResponse();
@@ -55,8 +55,8 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
     private function pay($input)
     {
         $payment = $this->order->getPayment();
-        $payment->setTransactionId($input->intRef);
-        $payment->setPreparedMessage('Coinzone: Paid with Transaction ID:' . $input->intRef);
+        $payment->setTransactionId($input->idTransaction);
+        $payment->setPreparedMessage('Coinzone: Paid with Transaction ID:' . $input->idTransaction);
         $payment->setShouldCloseParentTransaction(true);
         $payment->setIsTransactionCLosed(0);
         $payment->registerCaptureNotification($input->amount);
@@ -71,8 +71,8 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
     private function refund($input)
     {
         $payment = $this->order->getPayment();
-        $payment->setTransactionId($input->intRef);
-        $payment->setPreparedMessage('Coinzone: Refunded with Transaction ID:' . $input->intRef);
+        $payment->setTransactionId($input->idTransaction);
+        $payment->setPreparedMessage('Coinzone: Refunded with Transaction ID:' . $input->idTransaction);
         $payment->registerRefundNotification($input->amount);
 
         $this->order->save();
