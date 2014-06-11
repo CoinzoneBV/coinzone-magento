@@ -16,7 +16,7 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
         $input = json_decode($content);
 
         /** check signature */
-        $apiKey = $apiKey = Mage::getStoreConfig('payment/Coinzone/apiKey');
+        $apiKey = Mage::getStoreConfig('payment/Coinzone/apiKey');
         $stringToSign = $content . $this->getRequest()->getRequestUri() . $this->getRequest()->getHeader('timestamp');
         $signature = hash_hmac('sha256', $stringToSign, $apiKey);
         if ($signature !== $this->getRequest()->getHeader('signature')) {
@@ -27,6 +27,7 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
             exit('Invalid Signature');
         }
 
+        /** check order */
         $this->order = Mage::getModel('sales/order')->loadByIncrementId($input->extRef);
         if (!$this->order->getIncrementId()) {
             Mage::log('Coinzone - Invalid callback with orderId:' . $input->extRef);
