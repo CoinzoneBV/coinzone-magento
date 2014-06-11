@@ -15,7 +15,7 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
         $input = json_decode(file_get_contents('php://input'));
 
         $this->order = Mage::getModel('sales/order')->loadByIncrementId($input->extRef);
-        if (!$this->order) {
+        if (!$this->order->getIncrementId()) {
             Mage::log('Coinzone - Invalid callback with orderId:' . $input->extRef);
             Mage::app()->getResponse()
                 ->setHeader('HTTP/1.1', '503 Service Unavailable')
