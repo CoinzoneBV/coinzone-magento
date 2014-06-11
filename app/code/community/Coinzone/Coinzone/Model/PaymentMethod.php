@@ -12,6 +12,8 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
 
     protected $_canCapturePartial = true;
 
+    protected $_canRefundInvoicePartial = true;
+
     protected $_canRefund = true;
 
     protected $_canVoid = false;
@@ -105,6 +107,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
      */
     public function refund(Varien_Object $payment, $amount)
     {
+        /** @var Mage_Sales_Model_Order_Payment $payment */
         require_once(Mage::getModuleDir('coinzone-lib', 'Coinzone_Coinzone') . '/coinzone-lib/Coinzone.php');
 
         $clientCode = Mage::getStoreConfig('payment/Coinzone/clientCode');
@@ -118,7 +121,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
         $order = $payment->getOrder();
 
         /* create payload array */
-        $transactionId = explode('-', $order->getPayment()->getLastTransId())[0];
+        $transactionId = $order->getPayment()->getLastTransId();
         $payload = array(
             'refNo' => $transactionId,
             'amount' => $amount,
@@ -128,10 +131,16 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
 
         $coinzone = new Coinzone($clientCode, $apiKey);
         $response = $coinzone->callApi('cancel_request', $payload);
-
         if ($response->status->code !== 201) {
             throw new Exception('Could not generate refund transaction');
         }
+
+        $payment->setTransactionId($response->response->refNo);
+        $payment->setIsTransactionClosed(true);
+        $payment->setShouldCloseParentTransaction(!$payment->getCreditmemo()->getInvoice()->canRefund());
+        $payment->getCreditmemo()->setState(Mage_Sales_Model_Order_Creditmemo::STATE_OPEN);
+        $order->addStatusHistoryComment('Coinzone: Refund request sent to gateway');
+
         /* refund request success */
         return $this;
     }
