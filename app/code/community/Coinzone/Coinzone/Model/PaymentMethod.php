@@ -136,7 +136,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
             throw new Exception('Could not generate refund transaction');
         }
 
-        $payment->setTransactionId($response->response->refNo);
+        $payment->setTransactionId($response->response->idTransaction);
         $payment->setIsTransactionClosed(true);
         $payment->setShouldCloseParentTransaction(!$payment->getCreditmemo()->getInvoice()->canRefund());
         $payment->getCreditmemo()->setState(Mage_Sales_Model_Order_Creditmemo::STATE_OPEN);
