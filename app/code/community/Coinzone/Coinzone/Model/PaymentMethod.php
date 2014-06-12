@@ -76,6 +76,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
             'reference' => $order->getIncrementId(),
             'speed' => $speed,
             'email' => $order->getCustomerEmail(),
+            'redirectUrl' => Mage::getUrl('checkout/onepage/success'),
             'displayOrderInformation' => array(
                 'items' => $displayItems,
                 'tax' => $order->getTaxAmount(),
