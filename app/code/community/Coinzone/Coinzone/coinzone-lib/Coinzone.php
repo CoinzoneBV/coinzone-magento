@@ -8,7 +8,7 @@ class Coinzone
     /**
      * Coinzone API URL
      */
-    const API_URL = 'http://api.coinzone.web/v1/';
+    const API_URL = 'http://api.coinzone.com/v1/';
 
     /**
      * @var string
@@ -69,21 +69,23 @@ class Coinzone
         $this->prepareRequest($path, $payload);
 
         $url = self::API_URL . $path;
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $this->headers);
+        $curlHandler = curl_init($url);
+        curl_setopt($curlHandler, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curlHandler, CURLOPT_HTTPHEADER, $this->headers);
+        curl_setopt($curlHandler, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($curlHandler, CURLOPT_SSL_VERIFYPEER, false);
 
         if (!empty($payload)) {
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+            curl_setopt($curlHandler, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($curlHandler, CURLOPT_POSTFIELDS, json_encode($payload));
         }
 
-        $result = curl_exec($ch);
+        $result = curl_exec($curlHandler);
         if ($result === false) {
             return false;
         }
         $response = json_decode($result);
-        curl_close($ch);
+        curl_close($curlHandler);
 
         return $response;
     }
