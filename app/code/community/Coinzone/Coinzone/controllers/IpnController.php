@@ -13,11 +13,17 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
     public function indexAction()
     {
         $content = file_get_contents('php://input');
+
+        /* request type : json | http_post */
         $input = json_decode($content);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            parse_str($content, $inputStr);
+            $input = json_decode(json_encode($inputStr), false);
+        }
 
         /** check signature */
         $apiKey = Mage::getStoreConfig('payment/Coinzone/apiKey');
-        $stringToSign = $content . $this->getRequest()->getRequestUri() . $this->getRequest()->getHeader('timestamp');
+        $stringToSign = $content . Mage::helper('core/url')->getCurrentUrl() . $this->getRequest()->getHeader('timestamp');
         $signature = hash_hmac('sha256', $stringToSign, $apiKey);
         if ($signature !== $this->getRequest()->getHeader('signature')) {
             Mage::log('Coinzone - Invalid signature for callback');
@@ -34,16 +40,18 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
             Mage::app()->getResponse()
                 ->setHeader('HTTP/1.1', '400 Bad Request')
                 ->sendResponse();
-            exit;
+            exit('Invalid callback with orderId: ' . $input->reference);
         }
 
         switch ($input->status) {
             case "PAID":
             case "COMPLETE":
                 $this->pay($input);
+                echo 'OK_PAID';
                 break;
             case "REFUND":
                 $this->refund($input);
+                echo 'OK_REFUND';
                 break;
         }
     }
