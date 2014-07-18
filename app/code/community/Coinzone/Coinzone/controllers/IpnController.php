@@ -34,13 +34,13 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
         }
 
         /** check order */
-        $this->order = Mage::getModel('sales/order')->loadByIncrementId($input->reference);
+        $this->order = Mage::getModel('sales/order')->loadByIncrementId($input->merchantReference);
         if (!$this->order->getIncrementId()) {
-            Mage::log('Coinzone - Invalid callback with orderId:' . $input->reference);
+            Mage::log('Coinzone - Invalid callback with orderId:' . $input->merchantReference);
             Mage::app()->getResponse()
                 ->setHeader('HTTP/1.1', '400 Bad Request')
                 ->sendResponse();
-            exit('Invalid callback with orderId: ' . $input->reference);
+            exit('Invalid callback with orderId: ' . $input->merchantReference);
         }
 
         switch ($input->status) {
@@ -63,8 +63,8 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
     private function pay($input)
     {
         $payment = $this->order->getPayment();
-        $payment->setTransactionId($input->idTransaction);
-        $payment->setPreparedMessage('Coinzone: Paid with Transaction ID:' . $input->idTransaction);
+        $payment->setTransactionId($input->refNo);
+        $payment->setPreparedMessage('Coinzone: Paid with Transaction merchantReference:' . $input->refNo);
         $payment->setShouldCloseParentTransaction(true);
         $payment->setIsTransactionCLosed(0);
         $payment->registerCaptureNotification($input->amount);
@@ -79,8 +79,8 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
     private function refund($input)
     {
         $payment = $this->order->getPayment();
-        $payment->setTransactionId($input->idTransaction);
-        $payment->setPreparedMessage('Coinzone: Refunded with Transaction ID:' . $input->idTransaction);
+        $payment->setTransactionId($input->refNo);
+        $payment->setPreparedMessage('Coinzone: Refunded with Transaction reference:' . $input->refNo);
         $payment->registerRefundNotification($input->amount);
 
         $this->order->save();
