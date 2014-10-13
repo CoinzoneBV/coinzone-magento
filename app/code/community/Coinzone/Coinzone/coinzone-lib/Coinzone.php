@@ -8,7 +8,7 @@ class Coinzone
     /**
      * Coinzone API URL
      */
-    const API_URL = 'http://api.coinzone.com/v1/';
+    const API_URL = 'https://api.coinzone.com/v1/';
 
     /**
      * @var string

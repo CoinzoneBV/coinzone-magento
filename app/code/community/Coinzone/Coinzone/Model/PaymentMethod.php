@@ -73,7 +73,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
         $payload = array(
             'amount' => $amount,
             'currency' => $order->getBaseCurrencyCode(),
-            'reference' => $order->getIncrementId(),
+            'merchantReference' => $order->getIncrementId(),
             'speed' => $speed,
             'email' => $order->getCustomerEmail(),
             'redirectUrl' => Mage::getUrl('checkout/onepage/success'),
@@ -94,7 +94,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
 
         /* set order status to `Payment Review` */
         $payment->setIsTransactionPending(true);
-        $payment->setTransactionId($response->response->idTransaction);
+        $payment->setTransactionId($response->response->refNo);
         Mage::getSingleton('customer/session')->setRedirectUrl($response->response->url);
 
         return $this;
@@ -125,7 +125,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
         /* create payload array */
         $transactionId = $order->getPayment()->getLastTransId();
         $payload = array(
-            'idTransaction' => $transactionId,
+            'refNo' => $transactionId,
             'amount' => $amount,
             'currency' => $order->getBaseCurrencyCode(),
             'reason' => Mage::getSingleton('adminhtml/session')->getCommentText()
@@ -137,7 +137,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
             throw new Exception('Could not generate refund transaction');
         }
 
-        $payment->setTransactionId($response->response->idTransaction);
+        $payment->setTransactionId($response->response->refNo);
         $payment->setIsTransactionClosed(true);
         $payment->setShouldCloseParentTransaction(!$payment->getCreditmemo()->getInvoice()->canRefund());
         $payment->getCreditmemo()->setState(Mage_Sales_Model_Order_Creditmemo::STATE_OPEN);
