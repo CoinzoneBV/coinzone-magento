@@ -16,9 +16,9 @@ class Coinzone_Coinzone_IpnController extends Mage_Core_Controller_Front_Action
 
         /* request type : json | http_post */
         $input = json_decode($content);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            parse_str($content, $inputStr);
-            $input = json_decode(json_encode($inputStr), false);
+        if (empty($content) || json_last_error() !== JSON_ERROR_NONE) {
+            $input = json_decode(json_encode($this->getRequest()->getPost()));
+            $content = http_build_query($input);
         }
 
         /** check signature */
