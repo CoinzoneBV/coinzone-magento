@@ -18,7 +18,7 @@ The current version of the magento plugin is version 1.0. It is available either
 cloning this repository or downloading the .zip file from the
 [download page](https://github.com/CoinzoneBV/coinzone-magento/archive/master.zip).
 
-1. Upload files to your CS-Cart installation.
+1. Upload files to your Magento installation.
 
 2. Go to your Magento administration. System -&gt; Configuration -&gt; Payment Methods
 
