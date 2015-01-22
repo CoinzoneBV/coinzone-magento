@@ -48,7 +48,6 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
 
         $clientCode = Mage::getStoreConfig('payment/Coinzone/clientCode');
         $apiKey = Mage::getStoreConfig('payment/Coinzone/apiKey');
-        $speed = Mage::getStoreConfig('payment/Coinzone/speed');
 
         if (is_null($clientCode) || is_null($apiKey)) {
             throw new Exception('Missing Client Code/API Key');
@@ -74,7 +73,6 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
             'amount' => $amount,
             'currency' => $order->getBaseCurrencyCode(),
             'merchantReference' => $order->getIncrementId(),
-            'speed' => $speed,
             'email' => $order->getCustomerEmail(),
             'redirectUrl' => Mage::getUrl('checkout/onepage/success'),
             'displayOrderInformation' => array(
