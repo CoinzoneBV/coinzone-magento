@@ -55,7 +55,7 @@
             <Coinzone>
                 <active>0</active>
                 <model>Coinzone/paymentMethod</model>
-                <title>Coinzone</title>
+                <title>Bitcoin - Powered by Coinzone</title>
                 <payment_action>authorize</payment_action>
             </Coinzone>
         </payment>
