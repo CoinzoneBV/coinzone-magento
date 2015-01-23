@@ -75,6 +75,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
             'merchantReference' => $order->getIncrementId(),
             'email' => $order->getCustomerEmail(),
             'redirectUrl' => Mage::getUrl('checkout/onepage/success'),
+            'notificationUrl' => Mage::getUrl('coinzone_callback/ipn'),
             'displayOrderInformation' => array(
                 'items' => $displayItems,
                 'tax' => $order->getTaxAmount(),
@@ -82,6 +83,7 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
                 'discount' => $order->getDiscountAmount()
             ),
         );
+        var_dump($payload); die();
 
         $coinzone = new Coinzone($clientCode, $apiKey);
         $response = $coinzone->callApi('transaction', $payload);
