@@ -83,7 +83,6 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
                 'discount' => $order->getDiscountAmount()
             ),
         );
-        var_dump($payload); die();
 
         $coinzone = new Coinzone($clientCode, $apiKey);
         $response = $coinzone->callApi('transaction', $payload);
