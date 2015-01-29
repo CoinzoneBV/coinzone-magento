@@ -55,19 +55,6 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
         /** @var \Mage_Sales_Model_Order $order */
         $order = $payment->getOrder();
 
-        /* add products ordered to API request */
-        $items = $order->getAllItems();
-        $displayItems = array();
-        foreach ($items as $item) {
-            $displayItems[] = array(
-                'name' => $item->getName(),
-                'quantity' => $item->getQtyOrdered(),
-                'unitPrice' => $item->getPrice(),
-                'shortDescription' => $item->getDescription(),
-                'imageUrl' => (string)Mage::helper('catalog/image')->init($item->getProduct(), 'thumbnail')
-            );
-        }
-
         /* create payload array */
         $payload = array(
             'amount' => $amount,
@@ -76,12 +63,6 @@ class Coinzone_Coinzone_Model_PaymentMethod extends Mage_Payment_Model_Method_Ab
             'email' => $order->getCustomerEmail(),
             'redirectUrl' => Mage::getUrl('checkout/onepage/success'),
             'notificationUrl' => Mage::getUrl('coinzone_callback/ipn'),
-            'displayOrderInformation' => array(
-                'items' => $displayItems,
-                'tax' => $order->getTaxAmount(),
-                'shippingCost' => $order->getShippingAmount(),
-                'discount' => $order->getDiscountAmount()
-            ),
         );
 
         $coinzone = new Coinzone($clientCode, $apiKey);
