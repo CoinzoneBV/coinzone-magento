@@ -7,7 +7,7 @@
 #  System Requirements
 
   * [Merchant Account](https://merchant.coinzone.com/signup?source=magento)
-  * [Magento](http://magento.com/resources/system-requirements)
+  * [Magento 1.8+](http://magento.com/resources/system-requirements)
   * PHP 5.4+
   * Curl PHP Extension
   * JSON PHP Extension
